@@ -14,8 +14,8 @@
   "exportDir":"",
   "name":"sndDemoAudioEffects",
   "parent":{
-    "name":"04. Audio Effects",
-    "path":"folders/01. Demo/04. Audio Effects.yy",
+    "name":"04 Audio Effects",
+    "path":"folders/Demo/04 Audio Effects.yy",
   },
   "preload":false,
   "resourceType":"GMSound",

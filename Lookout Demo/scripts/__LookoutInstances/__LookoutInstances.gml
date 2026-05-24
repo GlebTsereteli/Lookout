@@ -1,5 +1,11 @@
 // feather ignore all
 
+function __LookoutInstances() : __LookoutModule("Instances") constructor {
+	
+}
+
+/*
+
 /// @func LookoutInstances()
 /// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
 /// 

@@ -9,8 +9,8 @@
   "name":"objDemoParent",
   "overriddenProperties":[],
   "parent":{
-    "name":"02. Instances",
-    "path":"folders/01. Demo/02. Instances.yy",
+    "name":"02 Instances",
+    "path":"folders/Demo/02 Instances.yy",
   },
   "parentObjectId":null,
   "persistent":false,

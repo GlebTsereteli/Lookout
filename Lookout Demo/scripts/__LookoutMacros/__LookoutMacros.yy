@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__LookoutMacros",
   "parent":{
-    "name":"03. Private",
-    "path":"folders/02. Lookout/03. Private.yy",
+    "name":"(System)",
+    "path":"folders/Lookout/(System).yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

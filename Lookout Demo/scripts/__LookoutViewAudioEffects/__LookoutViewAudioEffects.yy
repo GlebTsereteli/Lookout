@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__LookoutViewAudioEffects",
   "parent":{
-    "name":"__Views",
-    "path":"folders/02. Lookout/03. Private/__Views.yy",
+    "name":"Views",
+    "path":"folders/Lookout/(System)/Views.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

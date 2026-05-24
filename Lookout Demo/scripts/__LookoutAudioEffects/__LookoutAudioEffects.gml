@@ -1,5 +1,13 @@
 // feather ignore all
 
+function __LookoutAudioEffects() : __LookoutModule("AudioEffects") constructor {
+	
+}
+
+
+
+/*
+
 /// @func LookoutAudioEffects()
 /// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
 ///

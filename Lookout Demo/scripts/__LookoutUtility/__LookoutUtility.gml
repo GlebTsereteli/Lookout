@@ -14,3 +14,4 @@ function __LookoutCreateView(_name, _visible, _w, _h) {
 function __LookoutMod2(_dividend, _divisor) {
     return (_dividend - floor(_dividend / _divisor) * _divisor);
 }
+function __LookoutNoop() {}

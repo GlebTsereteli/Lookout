@@ -1,5 +1,14 @@
 // feather ignore all
 
+function __LookoutRooms() : __LookoutModule("Rooms") constructor {
+	
+}
+
+
+
+/*
+
+
 /// @func LookoutRooms()
 /// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
 /// 
