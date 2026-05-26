@@ -1,60 +1,21 @@
 // feather ignore all
 
-function __LookoutRooms() : __LookoutModule("Rooms") constructor {
-	
-}
-
-
-
-/*
-
-
-/// @func LookoutRooms()
-/// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
-/// 
 /// @desc Provides control over room switching and displays room history in a "Lookout: Rooms" debug view.
 /// Useful for quickly switching between rooms for testing, and identifying unintentional room changes.
-///
-/// Call this function once at the start of the game.
-function LookoutRooms(_startVisible = true) {
-	static __ = new(function(_startVisible) constructor {
-		__rooms = asset_get_ids(asset_room);
-		__names = array_map(__rooms, function(_room, _index) {
-			return $"{_index}: {room_get_name(_room)}";
-		});
-		__n = array_length(__rooms);
-		__prevRoom = room;
-		__room = room;
-		__size = undefined;
-		__history = {
-			__n: 16,
-			__pool: undefined,
-			
-			__Init: function() {
-				dbg_section("History");
-				__pool = array_create(__n, "-");
-				__Add(room);
-				for (var _i = 0; _i < __n; _i++) {
-					var _ii = _i + 1;
-					var _label = ((_ii < 10) ? $"0{_ii}" : _ii)
-					dbg_watch(ref_create(self, "__pool", _i), _label);
-				}
-			},
-			__Add: function(_room) {
-				array_insert(__pool, 0, room_get_name(_room));
-				if (array_length(__pool) > __n) {
-					array_pop(__pool);
-				}
-			},
-		};
-		__GoTo = function(_room) {
-			room_goto(_room);
-			__room = _room;
+function __LookoutRooms() : __LookoutModule("Rooms", 420, 414) constructor {
+	// Shared
+	static __Refresh = function() {
+		if (__prevRoom != room) {
+			__room = room;
 			__prevRoom = __room;
-			__history.__Add(_room);
-		};
-		
-		__LookoutCreateView("Lookout: Rooms", _startVisible, 420, 414);
+			__history.__Add(room);
+		}
+		if (__room != __prevRoom) {
+			__GoTo(__room);
+		}
+		__size = $"{room_width}x{room_height}";
+	};
+	static __Init = function() {
 		dbg_section("Control");
 		dbg_drop_down(ref_create(self, "__room"), __rooms, __names, "Room");
 		
@@ -83,17 +44,43 @@ function LookoutRooms(_startVisible = true) {
 		dbg_button("Last", function() { __GoTo(room_last); }, _w - 1, _size);
 		
 		__history.__Init();
-		
-		call_later(1, time_source_units_frames, function() {
-			if (__prevRoom != room) {
-				__room = room;
-				__prevRoom = __room;
-				__history.__Add(room);
+	};
+	
+	// Custom
+	__rooms = asset_get_ids(asset_room);
+	__names = array_map(__rooms, function(_room, _index) {
+		return $"{_index}: {room_get_name(_room)}";
+	});
+	__n = array_length(__rooms);
+	__prevRoom = room;
+	__room = room;
+	__size = undefined;
+	__history = {
+		__n: 16,
+		__pool: undefined,
+			
+		__Init: function() {
+			dbg_section("History");
+			for (var _i = 0; _i < __n; _i++) {
+				var _ii = _i + 1;
+				var _label = ((_ii < 10) ? $"0{_ii}" : _ii)
+				dbg_watch(ref_create(self, "__pool", _i), _label);
 			}
-			if (__room != __prevRoom) {
-				__GoTo(__room);
+		},
+		__Add: function(_room) {
+			array_insert(__pool, 0, room_get_name(_room));
+			if (array_length(__pool) > __n) {
+				array_pop(__pool);
 			}
-			__size = $"{room_width}x{room_height}";
-		}, true);
-	})(_startVisible);
+		},
+	};
+	__history.__pool = array_create(__history.__n, "-");
+	__history.__Add(room);
+	
+	static __GoTo = function(_room) {
+		room_goto(_room);
+		__room = _room;
+		__prevRoom = __room;
+		__history.__Add(_room);
+	};
 }
