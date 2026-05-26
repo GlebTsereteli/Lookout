@@ -54,6 +54,8 @@ function __LookoutResources() : __LookoutModule("Resources", 420, 705) construct
 		}
 	};
 	static __Refresh = function() {
+		static _startCamCount = (array_length(asset_get_ids(asset_room)) + 1) * 8 + 1;
+		
 		__resources = debug_event("ResourceCounts", true);
 		
 		var _syncGroup = audio_create_sync_group(false);
@@ -61,7 +63,7 @@ function __LookoutResources() : __LookoutModule("Resources", 420, 705) construct
 		audio_destroy_sync_group(_syncGroup);
 		
 		var _cam = camera_create();
-		__resources.__cameras = _cam;
+		__resources.__cameras = _cam - _startCamCount;
 		camera_destroy(_cam);
 		
 		__resources.__layers = 0;
