@@ -1,36 +1,107 @@
 // feather ignore all
 
-function __LookoutDisplay() : __LookoutModule("Display") constructor {
-	
-}
-
-
-/*
-
-/// @func LookoutDisplay()
-/// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
-/// 
 /// @desc Provides info and controls for display, window, application surface, and views in a "Lookout: Display" debug view.
 /// Inspired by Pixelated Pope's display_write_all_specs().
-/// 
-/// Call this function once at the start of the game.
-function LookoutDisplay(_startVisible = true) {
-	static __ = new (function(_startVisible) constructor {
-		__display = {
-			__size: undefined,
-			// ar, guiW, guiH, guiAR appSurfW, appSurfH, appSurfAR, timingMethod, sleepMargin
-			__orientation: undefined,
-			__frequency: undefined,
-			__dpi: undefined,
-		};
-		__window = {}; // x, y, w, h, ar, fullscreen, border, cursor, caption
-		__views = array_create_ext(8, function(_i) {
-			return {
-				__i: _i,
-				__cam: view_camera[_i],
-				// x, y, w, h, ar, visible
-			};
+function __LookoutDisplay() : __LookoutModule("Display", 420, 675) constructor {
+	// Shared
+	static __Init = function() {
+		// Display
+		dbg_section("Display", true);
+		dbg_watch(ref_create(__display, "__size"), "Size");
+		dbg_watch(ref_create(__display, "__ar"), "Aspect Ratio");
+		
+		dbg_text_separator("GUI", 1);
+		dbg_text_input(ref_create(__display, "__guiW"), "Width", "i"); __Half(display_get_gui_width, display_get_gui_height, display_set_gui_size);
+		dbg_text_input(ref_create(__display, "__guiH"), "Height", "i"); __Double(display_get_gui_width, display_get_gui_height, display_set_gui_size);
+		dbg_watch(ref_create(__display, "__guiAR"), "Aspect Ratio");
+		
+		dbg_text_separator("Application Surface", 1);
+		var _GetAppSurfW = function() { return surface_get_width(application_surface); };
+		var _GetAppSurfH = function() { return surface_get_height(application_surface); };
+		var _ResizeAppsurf = function(_w, _h) { surface_resize(application_surface, _w, _h); };
+		dbg_text_input(ref_create(__display, "__appSurfW"), "Width", "i"); __Half(_GetAppSurfW, _GetAppSurfH, _ResizeAppsurf);
+		dbg_text_input(ref_create(__display, "__appSurfH"), "Height", "i"); __Double(_GetAppSurfW, _GetAppSurfH, _ResizeAppsurf);
+		dbg_watch(ref_create(__display, "__appSurfAR"), "Aspect Ratio");
+		
+		dbg_text_separator("Extras", 1);
+		dbg_watch(ref_create(__display, "__orientation"), "Orientation");
+		dbg_watch(ref_create(__display, "__frequency"), "Frequency");
+		dbg_watch(ref_create(__display, "__dpi"), "DPI");
+		
+		static _timingMethods = [tm_sleep, tm_countvsyncs, tm_countvsyncs_winalt, tm_systemtiming];
+		static _timingMethodNames = ["Sleep", "Count VSyncs", "Count Vsyncs Winalt", "System Timing"];
+		dbg_drop_down(ref_create(__display, "__timingMethod"), _timingMethods, _timingMethodNames, "Timing Method");
+		dbg_slider_int(ref_create(__display, "__sleepMargin"), 0, 20, "Sleep Margin");
+		
+		// Window
+		dbg_section("Window", true);
+		dbg_text_input(ref_create(__window, "__x"), "X", "i");
+		dbg_same_line();
+		dbg_button("Center", function() {
+			window_set_position((display_get_width() - window_get_width()) / 2, window_get_y());
+		}, 50, 19);
+		dbg_text_input(ref_create(__window, "__y"), "Y", "i");
+		dbg_same_line();
+		dbg_button("Center", function() {
+			window_set_position(window_get_x(), (display_get_height() - window_get_height()) / 2);
+		}, 50, 19);
+		dbg_text_input(ref_create(__window, "__w"), "Width", "i");
+		dbg_text_input(ref_create(__window, "__h"), "Height", "i");
+		dbg_watch(ref_create(__window, "__ar"), "Aspect Ratio");
+		dbg_text_separator("");
+		dbg_checkbox(ref_create(__window, "__fullscreen"), "Fullscreen");
+		dbg_checkbox(ref_create(__window, "__border"), "Border");
+		
+		{static _cursors = [
+			cr_none,
+			cr_default,
+			cr_arrow,
+			cr_cross,
+			cr_beam,
+			cr_size_nesw,
+			cr_size_ns,
+			cr_size_nwse,
+			cr_size_we,
+			cr_uparrow,
+			cr_hourglass,
+			cr_appstart,
+			cr_handpoint,
+			cr_size_all,
+		];}
+		{static _cursorNames = [
+		    "None",
+		    "Default",
+		    "Arrow",
+		    "Cross",
+		    "Beam",
+		    "Size NESW",
+		    "Size NS",
+		    "Size NWSE",
+		    "Size WE",
+		    "Up Arrow",
+		    "Hourglass",
+		    "App Start",
+		    "Hand Point",
+		    "Size All"
+		];}
+		dbg_drop_down(ref_create(__window, "__cursor"), _cursors, _cursorNames, "Cursor");
+		dbg_text_input(ref_create(__window, "__caption"), "Caption");
+		
+		// Views
+		array_foreach(__views, function(_view, _i) {
+			with (_view) {
+				dbg_section($"View {_i}", false);
+				dbg_checkbox(ref_create(_view, "__visible"), "Visible");
+				dbg_text_input(ref_create(_view, "__x"), "X", "i");
+				dbg_text_input(ref_create(_view, "__y"), "Y", "i");
+				dbg_text_input(ref_create(_view, "__w"), "Width", "i");
+				dbg_text_input(ref_create(_view, "__w"), "Height", "i");
+				dbg_watch(ref_create(_view, "__ar"), "Aspect Ratio");
+				dbg_watch(ref_create(_view, "__port"), "Port");
+			}
 		});
+	};
+	static __Refresh = function() {
 		__Refresh = function() {
 			with (__display) {
 				__size = $"{display_get_width()}x{display_get_height()}";
@@ -103,123 +174,39 @@ function LookoutDisplay(_startVisible = true) {
 				}
 			});
 		};
-		
-		__LookoutCreateView("Lookout: Display", _startVisible, 420, 675);
-		
-		var __Half = function(_getterX, _getterY, _setter) {
-			dbg_same_line();
-			with ({_getterX, _getterY, _setter}) {
-				dbg_button("/2", function() {
-					_setter(_getterX() / 2, _getterY() / 2);
-				}, 20, 19);
-			}
-		}
-		var __Double = function(_getterX, _getterY, _setter) {
-			dbg_same_line();
-			with ({_getterX, _getterY, _setter}) {
-				dbg_button("x2", function() {
-					_setter(_getterX() * 2, _getterY() * 2);
-				}, 20, 19);
-			}
-		}
-		
-		// display
-		dbg_section("Display", true);
-		dbg_watch(ref_create(__display, "__size"), "Size");
-		dbg_watch(ref_create(__display, "__ar"), "Aspect Ratio");
-		
-		dbg_text_separator("GUI", 1);
-		dbg_text_input(ref_create(__display, "__guiW"), "Width", "i"); __Half(display_get_gui_width, display_get_gui_height, display_set_gui_size);
-		dbg_text_input(ref_create(__display, "__guiH"), "Height", "i"); __Double(display_get_gui_width, display_get_gui_height, display_set_gui_size);
-		dbg_watch(ref_create(__display, "__guiAR"), "Aspect Ratio");
-		
-		dbg_text_separator("Application Surface", 1);
-		var _GetAppSurfW = function() { return surface_get_width(application_surface); };
-		var _GetAppSurfH = function() { return surface_get_height(application_surface); };
-		var _ResizeAppsurf = function(_w, _h) { surface_resize(application_surface, _w, _h); };
-		dbg_text_input(ref_create(__display, "__appSurfW"), "Width", "i"); __Half(_GetAppSurfW, _GetAppSurfH, _ResizeAppsurf);
-		dbg_text_input(ref_create(__display, "__appSurfH"), "Height", "i"); __Double(_GetAppSurfW, _GetAppSurfH, _ResizeAppsurf);
-		dbg_watch(ref_create(__display, "__appSurfAR"), "Aspect Ratio");
-		
-		dbg_text_separator("Extras", 1);
-		dbg_watch(ref_create(__display, "__orientation"), "Orientation");
-		dbg_watch(ref_create(__display, "__frequency"), "Frequency");
-		dbg_watch(ref_create(__display, "__dpi"), "DPI");
-		
-		static _timingMethods = [tm_sleep, tm_countvsyncs, tm_countvsyncs_winalt, tm_systemtiming];
-		static _timingMethodNames = ["Sleep", "Count VSyncs", "Count Vsyncs Winalt", "System Timing"];
-		dbg_drop_down(ref_create(__display, "__timingMethod"), _timingMethods, _timingMethodNames, "Timing Method");
-		dbg_slider_int(ref_create(__display, "__sleepMargin"), 0, 20, "Sleep Margin");
-		
-		// window
-		dbg_section("Window", true);
-		dbg_text_input(ref_create(__window, "__x"), "X", "i");
+	};
+	
+	// Custom
+	__display = {
+		__size: undefined,
+		// ar, guiW, guiH, guiAR appSurfW, appSurfH, appSurfAR, timingMethod, sleepMargin
+		__orientation: undefined,
+		__frequency: undefined,
+		__dpi: undefined,
+	};
+	__window = {}; // x, y, w, h, ar, fullscreen, border, cursor, caption
+	__views = array_create_ext(8, function(_i) {
+		return {
+			__i: _i,
+			__cam: view_camera[_i],
+			// x, y, w, h, ar, visible
+		};
+	});
+	
+	static __Half = function(_getterX, _getterY, _setter) {
 		dbg_same_line();
-		dbg_button("Center", function() {
-			window_set_position((display_get_width() - window_get_width()) / 2, window_get_y());
-		}, 50, 19);
-		dbg_text_input(ref_create(__window, "__y"), "Y", "i");
+		with ({_getterX, _getterY, _setter}) {
+			dbg_button("/2", function() {
+				_setter(_getterX() / 2, _getterY() / 2);
+			}, 20, 19);
+		}
+	}
+	static __Double = function(_getterX, _getterY, _setter) {
 		dbg_same_line();
-		dbg_button("Center", function() {
-			window_set_position(window_get_x(), (display_get_height() - window_get_height()) / 2);
-		}, 50, 19);
-		dbg_text_input(ref_create(__window, "__w"), "Width", "i");
-		dbg_text_input(ref_create(__window, "__h"), "Height", "i");
-		dbg_watch(ref_create(__window, "__ar"), "Aspect Ratio");
-		dbg_text_separator("");
-		dbg_checkbox(ref_create(__window, "__fullscreen"), "Fullscreen");
-		dbg_checkbox(ref_create(__window, "__border"), "Border");
-		
-		{static _cursors = [
-			cr_none,
-			cr_default,
-			cr_arrow,
-			cr_cross,
-			cr_beam,
-			cr_size_nesw,
-			cr_size_ns,
-			cr_size_nwse,
-			cr_size_we,
-			cr_uparrow,
-			cr_hourglass,
-			cr_appstart,
-			cr_handpoint,
-			cr_size_all,
-		];}
-		{static _cursorNames = [
-		    "None",
-		    "Default",
-		    "Arrow",
-		    "Cross",
-		    "Beam",
-		    "Size NESW",
-		    "Size NS",
-		    "Size NWSE",
-		    "Size WE",
-		    "Up Arrow",
-		    "Hourglass",
-		    "App Start",
-		    "Hand Point",
-		    "Size All"
-		];}
-		dbg_drop_down(ref_create(__window, "__cursor"), _cursors, _cursorNames, "Cursor");
-		dbg_text_input(ref_create(__window, "__caption"), "Caption");
-		
-		// views
-		array_foreach(__views, function(_view, _i) {
-			with (_view) {
-				dbg_section($"View {_i}", false);
-				dbg_checkbox(ref_create(_view, "__visible"), "Visible");
-				dbg_text_input(ref_create(_view, "__x"), "X", "i");
-				dbg_text_input(ref_create(_view, "__y"), "Y", "i");
-				dbg_text_input(ref_create(_view, "__w"), "Width", "i");
-				dbg_text_input(ref_create(_view, "__w"), "Height", "i");
-				dbg_watch(ref_create(_view, "__ar"), "Aspect Ratio");
-				dbg_watch(ref_create(_view, "__port"), "Port");
-			}
-		});
-		
-		__Refresh();
-		call_later(1, time_source_units_frames, __Refresh, true);
-	})(_startVisible);
+		with ({_getterX, _getterY, _setter}) {
+			dbg_button("x2", function() {
+				_setter(_getterX() * 2, _getterY() * 2);
+			}, 20, 19);
+		}
+	}
 }
