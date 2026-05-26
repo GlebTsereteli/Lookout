@@ -1,5 +1,10 @@
 // feather ignore all
 
+/// @desc Displays "ResourceCounts" and "DumpMemory" data from debug_event() + a few custom-tracked resources in a "Lookout: Resources" debug view.
+/// Helps track memory leaks from data structures, surfaces, buffers, particles, time sources, and other runtime-created assets that can be accidentally left undisposed.
+/// 
+/// NOTE: This function is quite slow when the Debug Overlay is open, since debug_event() is being called every frame.
+/// Don't be alarmed if your FPS drops with this enabled.
 function __LookoutResources() : __LookoutModule("Resources", 420, 705) constructor {
 	// Shared
 	static __Init = function() {
@@ -96,9 +101,3 @@ function __LookoutResources() : __LookoutModule("Resources", 420, 705) construct
 	// Custom
 	__resources = {};
 }
-
-/// @desc Displays "ResourceCounts" and "DumpMemory" data from debug_event() + a few custom-tracked resources in a "Lookout: Resources" debug view.
-/// Helps track memory leaks from data structures, surfaces, buffers, particles, time sources, and other runtime-created assets that can be accidentally left undisposed.
-/// 
-/// NOTE: This function is quite slow when the Debug Overlay is open, since debug_event() is being called every frame.
-/// Don't be alarmed if your FPS drops with this enabled.

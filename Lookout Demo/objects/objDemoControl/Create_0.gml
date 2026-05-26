@@ -1,23 +1,14 @@
 
-/*
-
-// Limit this object to a single instance (singleton):
+// Limit this object to a single instance (singleton)
 if (instance_number(object_index) > 1) {
 	instance_destroy();
 	exit;
 }
 
-// Initialize Lookout views:
-LookoutResources(false);
-LookoutInstances(false);
-LookoutDisplay(false);
-LookoutRooms(false);
-LookoutAudioEffects(false);
-
-// Initialize demo views:
+// Initialize demo views
 var _x = 16;
 var _y = 35;
-dbg_view("Demo: Resources", true, _x, _y, 300, 850); {
+dbg_view("Demo: Resources", false, _x, _y, 300, 850); {
 	global.partSystem = part_system_create();
 	
 	Res = function(_name, _creator, _destructor) constructor {
