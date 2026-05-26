@@ -1,36 +1,10 @@
 // feather ignore all
 
-function __LookoutAudioEffects() : __LookoutModule("AudioEffects") constructor {
-	
-}
-
-
-
-/*
-
-/// @func LookoutAudioEffects()
-/// @param {Bool} startVisible? Whether the debug view starts visible (true) or not (false). [Default: true]
-///
 /// @desc Provides controls for all 8 audio effects on audio_bus_main in a "Lookout: Audio Effects" debug view.
 /// Includes type selection and parameter tweaking.
-///
-/// Call this function once at the start of the game.
-function LookoutAudioEffects(_startVisible = true) {
-	static __ = new (function(_startVisible) constructor {
-		__Refresh = function() {
-			dbg_set_view(__view);
-			array_foreach(__effects, function(_effect) {
-				_effect.__Refresh();
-			});
-		};
-		
-		call_later(1, time_source_units_frames, function() {
-			if (not is_debug_overlay_open()) return;
-			
-			__Refresh();
-		}, true);
-		
-		__LookoutCreateView("Lookout: Audio Effects", _startVisible, 420, 500);
+function __LookoutAudioEffects() : __LookoutModule("AudioEffects", 420, 500) constructor {
+	// Shared
+	static __Init = function() {
 		dbg_section("Master"); {
 			var _w = 130;
 			var _h = 19;
@@ -56,9 +30,17 @@ function LookoutAudioEffects(_startVisible = true) {
 				});
 			}, _w, _h);
 		}
-		__effects = array_create_ext(8, function(_i) {
-			return new __LookoutAudioEffect(_i);
-		});
+		
 		__Refresh();
-	})(_startVisible);
+	};
+	static __Refresh = function() {
+		array_foreach(__effects, function(_effect) {
+			_effect.__Refresh();
+		});
+	};
+	
+	// Custom
+	__effects = array_create_ext(8, function(_i) {
+		return new __LookoutAudioEffect(_i);
+	});
 }

@@ -8,6 +8,8 @@
 function __LookoutResources() : __LookoutModule("Resources", 420, 705) constructor {
 	// Shared
 	static __Init = function() {
+		__Refresh();
+		
 		dbg_section("Resources"); {
 			dbg_text_separator("Data Structures", 1); {
 				dbg_watch(ref_create(self, "listCount"), "DS Lists");

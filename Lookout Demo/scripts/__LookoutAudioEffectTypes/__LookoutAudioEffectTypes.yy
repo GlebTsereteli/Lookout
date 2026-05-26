@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__LookoutAudioEffects",
+  "%Name":"__LookoutAudioEffectTypes",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__LookoutAudioEffects",
+  "name":"__LookoutAudioEffectTypes",
   "parent":{
     "name":"05 Audio Effects",
     "path":"folders/Lookout/(System)/Modules/05 Audio Effects.yy",

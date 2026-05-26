@@ -4,6 +4,7 @@
 /// Helps track existing objects and their instance counts to identify objects that are out of place.
 function __LookoutInstances() : __LookoutModule("Instances") constructor {
 	// Shared
+	static __Init = __Refresh;
 	static __Refresh = function() {
 		if (instance_count == __totalInstances) return;
 		

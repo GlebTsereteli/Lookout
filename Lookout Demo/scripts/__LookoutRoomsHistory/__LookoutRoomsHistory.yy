@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"__LookoutRooms",
+  "%Name":"__LookoutRoomsHistory",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"__LookoutRooms",
+  "name":"__LookoutRoomsHistory",
   "parent":{
     "name":"04 Rooms",
     "path":"folders/Lookout/(System)/Modules/04 Rooms.yy",

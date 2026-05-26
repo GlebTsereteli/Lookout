@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__LookoutResources",
   "parent":{
-    "name":"Modules",
-    "path":"folders/Lookout/(System)/Modules.yy",
+    "name":"01 Resources",
+    "path":"folders/Lookout/(System)/Modules/01 Resources.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

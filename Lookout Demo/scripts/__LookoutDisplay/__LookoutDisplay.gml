@@ -4,6 +4,10 @@
 /// Inspired by Pixelated Pope's display_write_all_specs().
 function __LookoutDisplay() : __LookoutModule("Display", 420, 675) constructor {
 	// Shared
+	static __Setup = function() {
+		__Refresh();
+		__Init();
+	};
 	static __Init = function() {
 		// Display
 		dbg_section("Display", true);

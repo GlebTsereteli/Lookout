@@ -20,7 +20,6 @@ function __LookoutModule(_name, _w = 300, _h = 300) constructor {
 				var _x = (window_get_width() - _w) / 2;
 				__view = dbg_view($"Lookout: {__name}", true, _x, __LOOKOUT_VIEW_Y, __w, __h);
 				
-				__Refresh();
 				__Init();
 			}
 			else {
